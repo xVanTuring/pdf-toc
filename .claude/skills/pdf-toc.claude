@@ -1,0 +1,136 @@
+---
+description: PDF 目录（书签）操作工具 - 提取、嵌入和管理 PDF 文件的目录大纲
+---
+
+# PDF 目录工具
+
+## 概述
+
+这是一个用于操作 PDF 文件目录（书签/大纲）的工具集。支持从 PDF 提取现有目录，或将文本格式的目录嵌入到 PDF 中。
+
+## 命令
+
+### 提取 PDF 目录
+
+```bash
+pdf-toc extract <pdf_path>
+```
+
+从 PDF 文件中提取目录大纲（书签），显示带层级的目录结构。
+
+**参数:**
+- `pdf_path`: PDF 文件路径
+
+**示例:**
+```bash
+pdf-toc extract "马克思主义基本原理 2023.pdf"
+```
+
+### 嵌入目录到 PDF
+
+```bash
+pdf-toc embed <input_pdf> <toc_file> <output_pdf> [--parser <name>] [--offset <n>]
+```
+
+将目录文本文件嵌入到 PDF 的书签大纲中。
+
+**参数:**
+- `input_pdf`: 输入 PDF 文件路径
+- `toc_file`: 目录文本文件路径
+- `output_pdf`: 输出 PDF 文件路径
+- `--parser`: 解析器类型 (默认: text-indent)
+  - `text-indent`: 文本缩进格式（每2空格一级）
+  - `dash-prefix`: 连字符前缀格式（连续'-'数量表示层级）
+  - `number-dot`: 数字点号格式（1. 1.1 等表示层级）
+- `--offset`: 页码偏移量（默认: 0）
+
+**示例:**
+```bash
+pdf-toc embed input.pdf toc.txt output.pdf
+pdf-toc embed input.pdf toc.txt output.pdf --parser dash-prefix --offset 5
+```
+
+### 预览目录解析
+
+```bash
+pdf-toc preview <toc_file> [--parser <name>] [--offset <n>]
+```
+
+预览目录文件的解析结果（不修改 PDF）。
+
+**参数:**
+- `toc_file`: 目录文本文件路径
+- `--parser`: 解析器类型
+- `--offset`: 页码偏移量
+
+**示例:**
+```bash
+pdf-toc preview toc.txt
+pdf-toc preview toc.txt --parser number-dot
+```
+
+### 列出解析器
+
+```bash
+pdf-toc parsers
+```
+
+列出所有可用的目录解析器。
+
+## 目录格式示例
+
+### text-indent 格式（默认）
+
+```
+- 导论 / 1
+  - 一、什么是马克思主义/ 2
+  - 二、马克思主义的创立与发展/ 4
+- 第一章 世界的物质性及发展规律/ 25
+  - 第一节 世界的多样性与物质统一性/ 26
+```
+
+### dash-prefix 格式
+
+```
+- 导论 / 1
+-- 一、什么是马克思主义/ 2
+--- (一)马克思主义的创立/ 4
+---- 1.产生的经济社会根源/ 4
+```
+
+### number-dot 格式
+
+```
+1. 导论...................................1
+1.1 什么是马克思主义........................2
+1.2 马克思主义的创立与发展..................4
+```
+
+## 工作流程
+
+当用户需要处理 PDF 目录时，请按以下流程操作：
+
+1. **提取现有目录**（如果 PDF 已有目录）
+   ```bash
+   pdf-toc extract "document.pdf"
+   ```
+
+2. **准备目录文件**（根据提取结果或手动创建）
+   - 创建 `toc.txt` 文件
+   - 使用合适的格式
+
+3. **预览解析结果**
+   ```bash
+   pdf-toc preview toc.txt
+   ```
+
+4. **嵌入目录到 PDF**
+   ```bash
+   pdf-toc embed input.pdf toc.txt output.pdf
+   ```
+
+## 注意事项
+
+- 页码从 1 开始计数
+- 使用 `--offset` 参数调整页码偏移
+- 如果目录页码与实际 PDF 页码不匹配，请先提取目录确认实际页码

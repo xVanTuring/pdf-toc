@@ -46,6 +46,62 @@ python pdf_toc_embedder.py -i input.pdf -t toc.txt -o output.pdf --dry-run
 python pdf_toc_embedder.py -i input.pdf --extract-toc
 ```
 
+## AI 集成
+
+### MCP 服务器
+
+本项目支持 MCP (Model Context Protocol) 协议，可作为 AI 的工具调用。
+
+**启动 MCP 服务器：**
+
+```bash
+python mcp_server.py
+```
+
+**配置 Claude Desktop：**
+
+在 `~/Library/Application Support/Claude/claude_desktop_config.json` 中添加：
+
+```json
+{
+  "mcpServers": {
+    "pdf-toc": {
+      "command": "python",
+      "args": ["/path/to/pdf-toc/mcp_server.py"]
+    }
+  }
+}
+```
+
+**可用的 MCP 工具：**
+
+| 工具 | 描述 |
+|------|------|
+| `extract_pdf_toc` | 从 PDF 提取目录大纲 |
+| `embed_pdf_toc` | 将目录嵌入到 PDF |
+| `list_parsers` | 列出所有可用解析器 |
+| `preview_toc_parse` | 预览目录解析结果 |
+
+### Claude Code Skill
+
+项目内置了 Claude Code Skill，支持快捷命令。
+
+**可用命令：**
+
+```bash
+# 提取 PDF 目录
+pdf-toc extract <pdf_path>
+
+# 嵌入目录到 PDF
+pdf-toc embed <input_pdf> <toc_file> <output_pdf> [--parser <name>] [--offset <n>]
+
+# 预览目录解析
+pdf-toc preview <toc_file> [--parser <name>] [--offset <n>]
+
+# 列出解析器
+pdf-toc parsers
+```
+
 ## 参数说明
 
 | 参数 | 说明 |
