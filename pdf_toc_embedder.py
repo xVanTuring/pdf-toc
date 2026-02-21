@@ -7,6 +7,8 @@ PDF目录嵌入工具
 import argparse
 from typing import List
 
+from PyPDF2 import PdfReader
+
 from parsers import (
     TocEntry,
     BaseParser,
@@ -15,6 +17,42 @@ from parsers import (
     get_default_parser,
     register_parser
 )
+
+
+def extract_outline_from_pdf(pdf_path: str) -> List[TocEntry]:
+    """
+    从 PDF 中提取目录大纲
+
+    Args:
+        pdf_path: PDF 文件路径
+
+    Returns:
+        目录条目列表
+    """
+    reader = PdfReader(pdf_path)
+
+    def _traverse_outline(outline, level: int = 0) -> List[TocEntry]:
+        """递归遍历大纲结构"""
+        entries = []
+        if not outline:
+            return entries
+
+        for item in outline:
+            if isinstance(item, list):
+                # 处理子列表，层级+1
+                entries.extend(_traverse_outline(item, level + 1))
+            else:
+                # item 是一个 Destination 对象
+                from PyPDF2.generic import Destination
+                if isinstance(item, Destination):
+                    title = item.title
+                    # 获取目标页码
+                    page_num = reader.get_destination_page_number(item) + 1
+                    entries.append(TocEntry(title, page_num, level))
+
+        return entries
+
+    return _traverse_outline(reader.outline)
 
 
 def get_page_by_number(reader, page_num: int) -> int:
@@ -101,6 +139,7 @@ def main():
   %(prog)s -i input.pdf -t toc.txt -o output.pdf --offset 5
   %(prog)s -i input.pdf -t toc.txt -o output.pdf --parser dash-prefix
   %(prog)s --list-parsers
+  %(prog)s -i input.pdf --extract-toc
         """
     )
 
@@ -118,6 +157,8 @@ def main():
                         help='列出所有可用解析器')
     parser.add_argument('--dry-run', action='store_true',
                         help='只显示解析的目录，不修改PDF')
+    parser.add_argument('--extract-toc', action='store_true',
+                        help='打印现有PDF的目录大纲')
 
     args = parser.parse_args()
 
@@ -127,6 +168,20 @@ def main():
         for name, desc in list_parsers():
             default = " (默认)" if name == get_default_parser() else ""
             print(f"  {name}{default:12} - {desc}")
+        return
+
+    # 提取PDF目录
+    if args.extract_toc:
+        if not args.input:
+            parser.error("使用 --extract-toc 时需要 -i 参数")
+        print(f"正在提取PDF目录: {args.input}")
+        try:
+            toc_entries = extract_outline_from_pdf(args.input)
+            print_toc_tree(toc_entries)
+        except FileNotFoundError:
+            print(f"错误: 找不到文件 {args.input}")
+        except Exception as e:
+            print(f"错误: {e}")
         return
 
     # 检查必需参数

@@ -40,6 +40,12 @@ python pdf_toc_embedder.py -i input.pdf -t toc.txt -o output.pdf --offset 5
 python pdf_toc_embedder.py -i input.pdf -t toc.txt -o output.pdf --dry-run
 ```
 
+### 提取现有PDF目录
+
+```bash
+python pdf_toc_embedder.py -i input.pdf --extract-toc
+```
+
 ## 参数说明
 
 | 参数 | 说明 |
@@ -51,6 +57,7 @@ python pdf_toc_embedder.py -i input.pdf -t toc.txt -o output.pdf --dry-run
 | `-p, --parser` | 解析器类型（默认: text-indent） |
 | `--list-parsers` | 列出所有可用解析器 |
 | `--dry-run` | 预览模式，只显示解析结果 |
+| `--extract-toc` | 提取并打印现有PDF的目录大纲 |
 
 ## 内置解析器
 
