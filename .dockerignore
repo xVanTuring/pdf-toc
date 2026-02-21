@@ -1,0 +1,25 @@
+# Python 虚拟环境
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# IDE 配置
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Git
+.git/
+.gitignore
+
+# 文档
+README.md
+CLAUDE.md
+*.md
+
+# 测试/示例文件
+custom_parser_example.py
