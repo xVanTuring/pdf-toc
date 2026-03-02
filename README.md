@@ -58,16 +58,16 @@ python pdf_toc_embedder.py -i input.pdf --extract-toc
 python mcp_server.py
 ```
 
-**配置 Claude Desktop：**
+**配置 opencode **
 
-在 `~/Library/Application Support/Claude/claude_desktop_config.json` 中添加：
+在 `~/.opencode/opencode.json` 中添加：
 
 ```json
 {
-  "mcpServers": {
+  "mcp": {
     "pdf-toc": {
-      "command": "python",
-      "args": ["/path/to/pdf-toc/mcp_server.py"]
+      "type": "local",
+      "command": ["uvx", "--from", "git+https://github.com/xVanTuring/pdf-toc", "pdf-toc-mcp"],
     }
   }
 }
@@ -75,12 +75,12 @@ python mcp_server.py
 
 **可用的 MCP 工具：**
 
-| 工具 | 描述 |
-|------|------|
-| `extract_pdf_toc` | 从 PDF 提取目录大纲 |
-| `embed_pdf_toc` | 将目录嵌入到 PDF |
-| `list_parsers` | 列出所有可用解析器 |
-| `preview_toc_parse` | 预览目录解析结果 |
+| 工具                | 描述                |
+| ------------------- | ------------------- |
+| `extract_pdf_toc`   | 从 PDF 提取目录大纲 |
+| `embed_pdf_toc`     | 将目录嵌入到 PDF    |
+| `list_parsers`      | 列出所有可用解析器  |
+| `preview_toc_parse` | 预览目录解析结果    |
 
 ### Claude Code Skill
 
@@ -104,16 +104,16 @@ pdf-toc parsers
 
 ## 参数说明
 
-| 参数 | 说明 |
-|------|------|
-| `-i, --input` | 输入PDF文件路径 |
-| `-t, --toc` | 目录文本文件路径 |
-| `-o, --output` | 输出PDF文件路径 |
-| `--offset` | 页码偏移量（默认: 0） |
-| `-p, --parser` | 解析器类型（默认: text-indent） |
-| `--list-parsers` | 列出所有可用解析器 |
-| `--dry-run` | 预览模式，只显示解析结果 |
-| `--extract-toc` | 提取并打印现有PDF的目录大纲 |
+| 参数             | 说明                            |
+| ---------------- | ------------------------------- |
+| `-i, --input`    | 输入PDF文件路径                 |
+| `-t, --toc`      | 目录文本文件路径                |
+| `-o, --output`   | 输出PDF文件路径                 |
+| `--offset`       | 页码偏移量（默认: 0）           |
+| `-p, --parser`   | 解析器类型（默认: text-indent） |
+| `--list-parsers` | 列出所有可用解析器              |
+| `--dry-run`      | 预览模式，只显示解析结果        |
+| `--extract-toc`  | 提取并打印现有PDF的目录大纲     |
 
 ## 内置解析器
 

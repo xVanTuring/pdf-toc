@@ -252,6 +252,9 @@ async def main():
             )
         )
 
+# 新增同步包装
+def cli_entry():
+    asyncio.run(main())
 
 if __name__ == "__main__":
     asyncio.run(main())

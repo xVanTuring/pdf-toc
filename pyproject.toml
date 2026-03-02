@@ -3,7 +3,7 @@ name = "pdf-toc-embedder"
 version = "0.1.0"
 description = "PDF目录嵌入工具 - 解析目录文本文件并将目录嵌入到指定PDF中"
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.13"
 dependencies = [
     "PyPDF2>=3.0.0",
     "mcp>=0.1.0",
@@ -12,7 +12,7 @@ dependencies = [
 [project.scripts]
 pdf-toc-embedder = "pdf_toc_embedder:main"
 pdf-toc = "pdf_toc_embedder:main"
-pdf-toc-mcp = "mcp_server:main"
+pdf-toc-mcp = "mcp_server:cli_entry"
 
 [build-system]
 requires = ["hatchling"]
